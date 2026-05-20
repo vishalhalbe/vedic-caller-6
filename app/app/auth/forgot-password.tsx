@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Text, View, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { KeyboardAvoidingView, Platform, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Link, router } from 'expo-router';
 import { GlassInput } from '../../components/GlassInput';
 import { GoldButton } from '../../components/GoldButton';
 import { BrandHeader } from '../../components/BrandHeader';
@@ -39,6 +39,11 @@ export default function ForgotPasswordScreen() {
 
           <AnimatedEntry delay={100}>
             <GlassCard elevated style={styles.card}>
+              <TouchableOpacity onPress={() => router.replace('/auth/login')} style={styles.back} activeOpacity={0.7}>
+                <Text style={styles.backArrow}>←</Text>
+                <Text style={styles.backText}>Back</Text>
+              </TouchableOpacity>
+
               {error ? <Text style={styles.error}>{error}</Text> : null}
 
               {sent ? (
@@ -75,7 +80,24 @@ export default function ForgotPasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  card: { padding: 24 },
+  card: { padding: 24, paddingTop: 16 },
+  back: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginBottom: 16,
+    gap: 4,
+  },
+  backArrow: {
+    color: colors.goldDark,
+    fontSize: 16,
+    fontFamily: 'Manrope_400Regular',
+  },
+  backText: {
+    color: colors.goldDark,
+    fontSize: 13,
+    fontFamily: 'Manrope_600SemiBold',
+  },
   error: {
     color: colors.error, fontSize: 13, textAlign: 'center', marginBottom: 12,
   },

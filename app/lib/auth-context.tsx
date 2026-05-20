@@ -17,7 +17,7 @@ type AuthState = {
 };
 
 type AuthContextType = AuthState & {
-  signUp: (email: string, password: string, name: string) => Promise<string | null>;
+  signUp: (email: string, password: string, name: string, role?: 'user' | 'astrologer') => Promise<string | null>;
   signIn: (email: string, password: string) => Promise<string | null>;
   signOut: () => Promise<void>;
   setProfileRole: (role: 'user' | 'astrologer') => Promise<string | null>;
@@ -59,14 +59,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .eq('id', userId)
       .single();
 
-    setState({
-      session: (await supabase.auth.getSession()).data.session,
-      profile: data as Profile,
-      isLoading: false,
-    });
+    if (data) {
+      setState({
+        session: (await supabase.auth.getSession()).data.session,
+        profile: data as Profile,
+        isLoading: false,
+      });
+    } else {
+      const session = (await supabase.auth.getSession()).data.session;
+      setState(prev => ({ ...prev, session, isLoading: false }));
+    }
   }
 
-  const signUp = useCallback(async (email: string, password: string, name: string): Promise<string | null> => {
+  const signUp = useCallback(async (email: string, password: string, name: string, role?: 'user' | 'astrologer'): Promise<string | null> => {
     const { data, error } = await supabase.auth.signUp({ email, password });
 
     if (error) return error.message;
@@ -76,10 +81,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       id: data.user.id,
       name,
       email,
-      role: null,
+      role: role ?? null,
     });
 
     if (profileError) return profileError.message;
+
+    if (role) {
+      setState(prev => ({
+        ...prev,
+        profile: { id: data.user!.id, role, name, phone: null },
+      }));
+    }
+
     return null;
   }, []);
 

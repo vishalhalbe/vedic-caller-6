@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useAuth } from '../auth-context';
 
 type FormMode = 'login' | 'register';
+type Role = 'user' | 'astrologer';
 
 export function useAuthForm(mode: FormMode) {
   const { signIn, signUp } = useAuth();
@@ -9,6 +10,7 @@ export function useAuthForm(mode: FormMode) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [role, setRole] = useState<Role>('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -32,11 +34,11 @@ export function useAuthForm(mode: FormMode) {
     setLoading(true);
     const err = mode === 'login'
       ? await signIn(email.trim().toLowerCase(), password)
-      : await signUp(email.trim().toLowerCase(), password, name.trim());
+      : await signUp(email.trim().toLowerCase(), password, name.trim(), role);
     setLoading(false);
     if (err) setError(err);
     return err;
-  }, [email, password, name, mode, signIn, signUp, validate]);
+  }, [email, password, name, mode, role, signIn, signUp, validate]);
 
   const reset = useCallback(() => {
     setError('');
@@ -47,6 +49,7 @@ export function useAuthForm(mode: FormMode) {
     email, setEmail,
     password, setPassword,
     confirm, setConfirm,
+    role, setRole,
     error, setError,
     loading, submit, reset,
   };
