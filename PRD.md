@@ -176,6 +176,7 @@ Connect seekers with trusted Vedic astrologers via seamless voice calls — acce
 | Tavily | Local (npx) | Web search (research, content) |
 | Chrome DevTools | Local (npx) | Browser debugging, DevTools inspection |
 | Stitch | Local (npx) | UI mockup generation from prompts |
+| Vercel | Remote (OAuth) | Deploy previews, deployment logs, redeploy trigger |
 
 ### Platform Abstraction Strategy
 Features that differ between web and native get an abstraction layer from day 1:
@@ -578,7 +579,7 @@ Base 4px. Key: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64.
 ### Phase Timeline
 ```
 Phase 0 — Discovery          DONE     (pull existing schema, audit)
-Phase 1 — Foundation         DONE     (Expo scaffolded, MCPs, design tokens)
+Phase 1 — Foundation         DONE     (Expo scaffolded, MCPs, design tokens, Vercel CI/CD)
 Phase 2 — Schema + RLS       DONE     (7 migration tables pushed)
 Phase 3 — Auth               Days 1-2  (OTP, roles, onboarding)
 Phase 4 — Edge Functions     DONE     (15 active, 6 new, 5 critical bugs fixed)
@@ -596,6 +597,16 @@ Phase 0 → Phase 1 → Phase 2 ────────────→ Phase 3 
                             └─→ Phase 4 ──→ Phase 8 ←──────────┴──→ Phase 9 → Phase 10
                             └─→ Phase 7 (parallel after Phase 2)
 ```
+
+### CI/CD Pipeline
+```
+Push to master → Vercel auto-deploys from app/ root
+  Install: npm install --legacy-peer-deps
+  Build:   npx expo export --platform web
+  Output:  dist/
+  Live at: vedic-caller-6.vercel.app
+```
+Failed builds show ❌ on the GitHub commit. Push a fix to redeploy.
 
 ---
 
@@ -630,6 +641,11 @@ Phase 0 → Phase 1 → Phase 2 ────────────→ Phase 3 
 | 8 — Voice + Chat | 🔴 Pending | — | — | — |
 | 9 — Web Polish + Test | 🔴 Pending | — | — | — |
 | 10 — Mobile Release | 🔴 Pending | — | — | — |
+
+### Infrastructure Status
+| Item | Status |
+|------|--------|
+| Vercel CI/CD auto-deploy | ✅ Done |
 
 ### Feature Status
 | ID | Feature | Prio | Status | E2E | RLS | Contrast | PR Merged |
