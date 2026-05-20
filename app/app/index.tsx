@@ -1,38 +1,70 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { router, useSegments } from 'expo-router';
+import { useAuth } from '../lib/auth-context';
+import { colors } from '../lib/theme';
 
-const COLORS = {
-  gold: '#D4AF37',
-  cream: '#FAF9F6',
-  dark: '#1A1006',
-  muted: '#5C4A32',
-};
+function useProtectedRoute() {
+  const { session, profile, isLoading } = useAuth();
+  const segments = useSegments();
 
-export default function HomeScreen() {
+  useEffect(() => {
+    if (isLoading) return;
+
+    const isAuthRoute = segments[0] === 'auth';
+
+    if (!session) {
+      if (!isAuthRoute) router.replace('/auth/login');
+      return;
+    }
+
+    if (!profile?.role) {
+      if (segments[0] !== 'auth') router.replace('/auth/role-select');
+      return;
+    }
+
+    if (isAuthRoute) {
+      const route = profile.role === 'admin'
+        ? '/(admin)/home'
+        : profile.role === 'astrologer'
+        ? '/(astrologer)/home'
+        : '/(user)/home';
+      router.replace(route);
+    }
+  }, [session, profile, isLoading]);
+}
+
+export default function IndexScreen() {
+  useProtectedRoute();
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View style={styles.splash}>
+        <Text style={styles.brand}>VedicCaller</Text>
+        <ActivityIndicator color={colors.gold} style={{ marginTop: 16 }} />
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>VedicCaller</Text>
-      <Text style={styles.subtitle}>Connect with trusted astrologers</Text>
+    <View style={styles.splash}>
+      <Text style={styles.brand}>VedicCaller</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  splash: {
     flex: 1,
-    backgroundColor: COLORS.cream,
-    alignItems: 'center',
+    backgroundColor: colors.bg,
     justifyContent: 'center',
-    padding: 24,
+    alignItems: 'center',
   },
-  title: {
+  brand: {
     fontSize: 32,
     fontWeight: '700',
-    color: COLORS.gold,
+    color: colors.gold,
     letterSpacing: 1,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: COLORS.muted,
-    marginTop: 8,
   },
 });

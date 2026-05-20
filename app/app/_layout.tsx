@@ -1,13 +1,20 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { AuthProvider } from '../lib/auth-context';
 
 export default function RootLayout() {
   return (
-    <>
+    <AuthProvider>
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="auth/login" />
+        <Stack.Screen name="auth/register" />
+        <Stack.Screen name="auth/role-select" />
+        <Stack.Screen name="(user)/home" />
+        <Stack.Screen name="(astrologer)/home" />
+        <Stack.Screen name="(admin)/home" />
       </Stack>
-    </>
+    </AuthProvider>
   );
 }
