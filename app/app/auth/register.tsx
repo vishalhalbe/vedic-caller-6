@@ -1,108 +1,68 @@
-import { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { KeyboardAvoidingView, Platform, Text, View, StyleSheet } from 'react-native';
 import { Link, router } from 'expo-router';
-import { colors, spacing, radius } from '../../lib/theme';
-import { useAuth } from '../../lib/auth-context';
+import { GlassInput } from '../../components/GlassInput';
+import { GoldButton } from '../../components/GoldButton';
+import { BrandHeader } from '../../components/BrandHeader';
+import { GlassCard } from '../../components/GlassCard';
+import { useAuthForm } from '../../lib/hooks/use-auth-form';
+import { authContainer, authInner } from '../../styles/glass';
+import { colors } from '../../lib/theme';
 
 export default function RegisterScreen() {
-  const { signUp } = useAuth();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const form = useAuthForm('register');
 
   async function handleRegister() {
-    setError('');
-    if (!name.trim() || !email.trim() || !password) {
-      setError('Please fill in all fields');
-      return;
-    }
-    if (password !== confirm) {
-      setError('Passwords do not match');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-    setLoading(true);
-    const err = await signUp(email.trim().toLowerCase(), password, name.trim());
-    setLoading(false);
-    if (err) {
-      setError(err);
-    } else {
-      router.replace('/auth/role-select');
-    }
+    const err = await form.submit();
+    if (!err) router.replace('/auth/role-select');
   }
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={styles.inner}>
-        <Text style={styles.brand}>VedicCaller</Text>
-        <Text style={styles.tagline}>Create your account</Text>
+    <KeyboardAvoidingView style={authContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={authInner}>
+        <BrandHeader tagline="Create your account" />
 
-        <View style={styles.form}>
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+        <GlassCard elevated style={styles.card}>
+          {form.error ? <Text style={styles.error}>{form.error}</Text> : null}
 
-          <TextInput
-            style={styles.input}
-            placeholder="Full Name"
-            placeholderTextColor={colors.textMuted}
-            value={name}
-            onChangeText={setName}
+          <GlassInput
+            label="Full Name"
+            placeholder="Your name"
+            value={form.name}
+            onChangeText={form.setName}
             autoCapitalize="words"
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor={colors.textMuted}
-            value={email}
-            onChangeText={setEmail}
+          <GlassInput
+            label="Email"
+            placeholder="your@email.com"
+            value={form.email}
+            onChangeText={form.setEmail}
             keyboardType="email-address"
-            autoCapitalize="none"
             autoComplete="email"
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor={colors.textMuted}
-            value={password}
-            onChangeText={setPassword}
+          <GlassInput
+            label="Password"
+            placeholder="At least 6 characters"
+            value={form.password}
+            onChangeText={form.setPassword}
             secureTextEntry
-            autoCapitalize="none"
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            placeholderTextColor={colors.textMuted}
-            value={confirm}
-            onChangeText={setConfirm}
+          <GlassInput
+            label="Confirm Password"
+            placeholder="Repeat your password"
+            value={form.confirm}
+            onChangeText={form.setConfirm}
             secureTextEntry
-            autoCapitalize="none"
           />
 
-          <TouchableOpacity
-            style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={handleRegister}
-            disabled={loading}
-            activeOpacity={0.8}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Create Account</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+          <GoldButton title="Create Account" onPress={handleRegister} loading={form.loading} />
+        </GlassCard>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account? </Text>
-          <Link href="/auth/login" style={styles.footerLink}>Sign In</Link>
+          <Link href="/auth/login" style={styles.link}>Sign In</Link>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -110,76 +70,25 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-  },
-  inner: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    maxWidth: 400,
-    width: '100%',
-    alignSelf: 'center',
-  },
-  brand: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: colors.gold,
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
-  tagline: {
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: 'center',
-    marginTop: spacing.xs,
-    marginBottom: spacing.xl,
-  },
-  form: {
-    gap: spacing.md,
-  },
-  input: {
-    height: 50,
-    backgroundColor: colors.bgCard,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    fontSize: 16,
-    color: colors.textPrimary,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  button: {
-    height: 50,
-    backgroundColor: colors.gold,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.sm,
-  },
-  buttonDisabled: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+  card: {
+    padding: 24,
   },
   error: {
     color: colors.error,
     fontSize: 13,
     textAlign: 'center',
+    marginBottom: 12,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: spacing.lg,
+    marginTop: 24,
   },
   footerText: {
     color: colors.textMuted,
     fontSize: 14,
   },
-  footerLink: {
+  link: {
     color: colors.gold,
     fontSize: 14,
     fontWeight: '600',

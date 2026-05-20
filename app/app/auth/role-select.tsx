@@ -1,133 +1,82 @@
-import { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { BrandHeader } from '../../components/BrandHeader';
+import { GoldButton } from '../../components/GoldButton';
+import { GlassCard } from '../../components/GlassCard';
+import { useRoleSelect } from '../../lib/hooks/use-role-select';
+import { authContainer, authInner } from '../../styles/glass';
 import { colors, spacing, radius } from '../../lib/theme';
-import { useAuth } from '../../lib/auth-context';
 
-type Role = 'user' | 'astrologer';
+const roles = [
+  { key: 'user' as const, icon: '🌟', title: "I'm a Seeker", desc: 'Find guidance from trusted astrologers' },
+  { key: 'astrologer' as const, icon: '🔮', title: "I'm an Astrologer", desc: 'Offer your services and grow your practice' },
+];
 
 export default function RoleSelectScreen() {
-  const { setProfileRole } = useAuth();
-  const [selected, setSelected] = useState<Role | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { selected, setSelected, loading, error, confirm } = useRoleSelect();
 
   async function handleContinue() {
-    if (!selected) return;
-    setLoading(true);
-    const err = await setProfileRole(selected);
-    setLoading(false);
-    if (err) {
-      setError(err);
-    } else {
-      router.replace('/');
-    }
+    const err = await confirm();
+    if (!err) router.replace('/');
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>You're almost in!</Text>
-      <Text style={styles.subtitle}>Choose your path</Text>
+    <View style={authContainer}>
+      <View style={authInner}>
+        <BrandHeader tagline="Choose your path" />
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+        {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <TouchableOpacity
-        style={[styles.card, selected === 'user' && styles.cardSelected]}
-        onPress={() => setSelected('user')}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.emoji}>🌟</Text>
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>I'm a Seeker</Text>
-          <Text style={styles.cardDesc}>Find guidance from trusted astrologers</Text>
-        </View>
-        <View style={[styles.radio, selected === 'user' && styles.radioSelected]}>
-          {selected === 'user' && <View style={styles.radioInner} />}
-        </View>
-      </TouchableOpacity>
+        {roles.map(r => {
+          const isSelected = selected === r.key;
+          return (
+            <TouchableOpacity
+              key={r.key}
+              onPress={() => setSelected(r.key)}
+              activeOpacity={0.8}
+            >
+              <GlassCard elevated={isSelected} style={[styles.card, isSelected && styles.cardSelected]}>
+                <Text style={styles.icon}>{r.icon}</Text>
+                <View style={styles.cardBody}>
+                  <Text style={styles.cardTitle}>{r.title}</Text>
+                  <Text style={styles.cardDesc}>{r.desc}</Text>
+                </View>
+                <View style={[styles.radio, isSelected && styles.radioSelected]}>
+                  {isSelected && <View style={styles.radioInner} />}
+                </View>
+              </GlassCard>
+            </TouchableOpacity>
+          );
+        })}
 
-      <TouchableOpacity
-        style={[styles.card, selected === 'astrologer' && styles.cardSelected]}
-        onPress={() => setSelected('astrologer')}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.emoji}>🔮</Text>
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>I'm an Astrologer</Text>
-          <Text style={styles.cardDesc}>Offer your services and grow your practice</Text>
-        </View>
-        <View style={[styles.radio, selected === 'astrologer' && styles.radioSelected]}>
-          {selected === 'astrologer' && <View style={styles.radioInner} />}
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[
-          styles.button,
-          (!selected || loading) && styles.buttonDisabled,
-        ]}
-        onPress={handleContinue}
-        disabled={!selected || loading}
-        activeOpacity={0.8}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Continue</Text>
-        )}
-      </TouchableOpacity>
+        <GoldButton
+          title="Continue"
+          onPress={handleContinue}
+          loading={loading}
+          disabled={!selected}
+          style={{ marginTop: spacing.lg }}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    maxWidth: 400,
-    width: '100%',
-    alignSelf: 'center',
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: colors.textPrimary,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: 'center',
-    marginTop: spacing.xs,
-    marginBottom: spacing.xl,
-  },
-  error: {
-    color: colors.error,
-    fontSize: 13,
-    textAlign: 'center',
-    marginBottom: spacing.md,
-  },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.bgCard,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
-    borderWidth: 1.5,
-    borderColor: colors.border,
+    padding: 20,
+    marginBottom: 14,
   },
   cardSelected: {
-    borderColor: colors.gold,
-    backgroundColor: '#FFFDF5',
+    backgroundColor: 'rgba(212, 175, 55, 0.08)',
+    borderColor: 'rgba(212, 175, 55, 0.4)',
   },
-  emoji: {
+  icon: {
     fontSize: 28,
-    marginRight: spacing.md,
+    marginRight: 16,
   },
-  cardContent: {
+  cardBody: {
     flex: 1,
   },
   cardTitle: {
@@ -148,7 +97,7 @@ const styles = StyleSheet.create({
     borderColor: colors.textMuted,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: spacing.sm,
+    marginLeft: 12,
   },
   radioSelected: {
     borderColor: colors.gold,
@@ -159,20 +108,10 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: colors.gold,
   },
-  button: {
-    height: 50,
-    backgroundColor: colors.gold,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.lg,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+  error: {
+    color: colors.error,
+    fontSize: 13,
+    textAlign: 'center',
+    marginBottom: 14,
   },
 });
