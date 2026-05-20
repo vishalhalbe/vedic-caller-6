@@ -48,6 +48,8 @@ export default function LoginScreen() {
               />
 
               <GoldButton title="Sign In" onPress={handleLogin} loading={form.loading} />
+
+              <Link href="/auth/forgot-password" style={styles.forgot}>Forgot Password?</Link>
             </GlassCard>
           </AnimatedEntry>
 
@@ -97,5 +99,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     textDecorationLine: 'underline',
+  },
+  forgot: {
+    color: colors.goldDark,
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: 16,
+    fontFamily: 'Manrope_600SemiBold',
   },
 });
