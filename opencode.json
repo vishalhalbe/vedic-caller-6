@@ -1,0 +1,50 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "supabase": {
+      "type": "remote",
+      "url": "https://mcp.supabase.com/mcp?project_ref=bkxmbmdnkpmvtaixeiik",
+      "enabled": true
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp"],
+      "enabled": true
+    },
+    "razorpay": {
+      "type": "local",
+      "command": ["npx", "-y", "razorpay-mcp"],
+      "enabled": true,
+      "env": {
+        "RAZORPAY_KEY_ID": "<your_key_id>",
+        "RAZORPAY_KEY_SECRET": "<your_key_secret>"
+      }
+    },
+    "tavily": {
+      "type": "local",
+      "command": ["npx", "-y", "tavily-mcp@latest"],
+      "enabled": true,
+      "env": {
+        "TAVILY_API_KEY": "<your_tavily_api_key>"
+      }
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "enabled": true
+    },
+    "stitch": {
+      "type": "local",
+      "command": ["npx", "-y", "@google/stitch-mcp"],
+      "enabled": false,
+      "env": {
+        "STITCH_API_KEY": "<your_stitch_api_key>"
+      }
+    },
+    "vercel": {
+      "type": "remote",
+      "url": "https://mcp.vercel.com",
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "name": "Sattva Ether",
+  "version": "1.0.0",
+  "description": "Golden light design system for VedicCaller",
+  "colors": {
+    "primary": {
+      "gold": "#D4AF37",
+      "goldLight": "#F0D060",
+      "goldDark": "#B8960F",
+      "cream": "#FAF9F6",
+      "creamDark": "#F5F0E8"
+    },
+    "semantic": {
+      "background": "#0A0A14",
+      "surface": "#141420",
+      "surfaceElevated": "#1C1C30",
+      "textPrimary": "#FAF9F6",
+      "textSecondary": "#A0A0B0",
+      "textMuted": "#606070",
+      "border": "#2A2A3E",
+      "borderLight": "#3A3A50"
+    },
+    "accent": {
+      "success": "#34D399",
+      "warning": "#FBBF24",
+      "error": "#F87171",
+      "info": "#60A5FA"
+    },
+    "astrologer": {
+      "online": "#34D399",
+      "busy": "#FBBF24",
+      "offline": "#606070"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "heading": "System",
+      "body": "System",
+      "mono": "monospace"
+    },
+    "fontSize": {
+      "xs": 12,
+      "sm": 14,
+      "base": 16,
+      "lg": 18,
+      "xl": 20,
+      "2xl": 24,
+      "3xl": 30,
+      "4xl": 36
+    },
+    "fontWeight": {
+      "regular": "400",
+      "medium": "500",
+      "semibold": "600",
+      "bold": "700"
+    },
+    "lineHeight": {
+      "tight": 1.2,
+      "normal": 1.5,
+      "relaxed": 1.75
+    }
+  },
+  "spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "xl": 32,
+    "2xl": 48,
+    "3xl": 64
+  },
+  "borderRadius": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20,
+    "xl": 28,
+    "full": 9999
+  },
+  "shadows": {
+    "card": {
+      "color": "rgba(212, 175, 55, 0.08)",
+      "offset": { "width": 0, "height": 2 },
+      "blur": 8,
+      "spread": 0
+    },
+    "goldenGlow": {
+      "color": "rgba(212, 175, 55, 0.15)",
+      "offset": { "width": 0, "height": 0 },
+      "blur": 16,
+      "spread": 0
+    },
+    "elevated": {
+      "color": "rgba(0, 0, 0, 0.3)",
+      "offset": { "width": 0, "height": 4 },
+      "blur": 12,
+      "spread": 0
+    }
+  },
+  "animation": {
+    "duration": {
+      "fast": 150,
+      "normal": 300,
+      "slow": 500
+    },
+    "easing": {
+      "default": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "emphasis": "cubic-bezier(0, 0, 0.2, 1)"
+    }
+  },
+  "components": {
+    "avatar": {
+      "sizes": {
+        "sm": 32,
+        "md": 48,
+        "lg": 64,
+        "xl": 96
+      }
+    },
+    "callButton": {
+      "acceptColor": "#34D399",
+      "rejectColor": "#F87171",
+      "mutedColor": "#FBBF24",
+      "size": 64
+    },
+    "walletCard": {
+      "backgroundColor": "#1C1C30",
+      "borderColor": "#D4AF37",
+      "borderWidth": 1
+    }
+  }
+}
