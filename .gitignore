@@ -37,6 +37,10 @@ yarn-error.*
 # Supabase temp
 supabase/.temp/
 
+# Playwright artifacts
+.playwright-mcp/
+test-results/
+
 # Generated native folders
 /ios
 /android
