@@ -4,8 +4,10 @@ import { GlassInput } from '../../components/GlassInput';
 import { GoldButton } from '../../components/GoldButton';
 import { BrandHeader } from '../../components/BrandHeader';
 import { GlassCard } from '../../components/GlassCard';
+import { ScreenShell } from '../../components/ScreenShell';
+import { AnimatedEntry } from '../../components/AnimatedEntry';
 import { useAuthForm } from '../../lib/hooks/use-auth-form';
-import { authContainer, authInner } from '../../styles/glass';
+import { authInner } from '../../styles/glass';
 import { colors } from '../../lib/theme';
 
 export default function RegisterScreen() {
@@ -17,55 +19,63 @@ export default function RegisterScreen() {
   }
 
   return (
-    <KeyboardAvoidingView style={authContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={authInner}>
-        <BrandHeader tagline="Create your account" />
+    <ScreenShell>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={authInner}>
+          <AnimatedEntry>
+            <BrandHeader tagline="Create your account" />
+          </AnimatedEntry>
 
-        <GlassCard elevated style={styles.card}>
-          {form.error ? <Text style={styles.error}>{form.error}</Text> : null}
+          <AnimatedEntry delay={100}>
+            <GlassCard elevated style={styles.card}>
+              {form.error ? <Text style={styles.error}>{form.error}</Text> : null}
 
-          <GlassInput
-            label="Full Name"
-            placeholder="Your name"
-            value={form.name}
-            onChangeText={form.setName}
-            autoCapitalize="words"
-          />
+              <GlassInput
+                label="Full Name"
+                placeholder="Your name"
+                value={form.name}
+                onChangeText={form.setName}
+                autoCapitalize="words"
+              />
 
-          <GlassInput
-            label="Email"
-            placeholder="your@email.com"
-            value={form.email}
-            onChangeText={form.setEmail}
-            keyboardType="email-address"
-            autoComplete="email"
-          />
+              <GlassInput
+                label="Email"
+                placeholder="your@email.com"
+                value={form.email}
+                onChangeText={form.setEmail}
+                keyboardType="email-address"
+                autoComplete="email"
+              />
 
-          <GlassInput
-            label="Password"
-            placeholder="At least 6 characters"
-            value={form.password}
-            onChangeText={form.setPassword}
-            secureTextEntry
-          />
+              <GlassInput
+                label="Password"
+                placeholder="At least 6 characters"
+                value={form.password}
+                onChangeText={form.setPassword}
+                secureTextEntry
+              />
 
-          <GlassInput
-            label="Confirm Password"
-            placeholder="Repeat your password"
-            value={form.confirm}
-            onChangeText={form.setConfirm}
-            secureTextEntry
-          />
+              <GlassInput
+                label="Confirm Password"
+                placeholder="Repeat your password"
+                value={form.confirm}
+                onChangeText={form.setConfirm}
+                secureTextEntry
+              />
 
-          <GoldButton title="Create Account" onPress={handleRegister} loading={form.loading} />
-        </GlassCard>
+              <GoldButton title="Create Account" onPress={handleRegister} loading={form.loading} />
+            </GlassCard>
+          </AnimatedEntry>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account? </Text>
-          <Link href="/auth/login" style={styles.link}>Sign In</Link>
+          <AnimatedEntry delay={200}>
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>Already have an account? </Text>
+              <Link href="/auth/login" style={styles.link}>Sign In</Link>
+            </View>
+          </AnimatedEntry>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ScreenShell>
   );
 }
 
@@ -87,9 +97,10 @@ const styles = StyleSheet.create({
   footerText: {
     color: colors.textMuted,
     fontSize: 14,
+    fontFamily: 'Manrope_400Regular',
   },
   link: {
-    color: colors.gold,
+    color: colors.goldDark,
     fontSize: 14,
     fontWeight: '600',
   },

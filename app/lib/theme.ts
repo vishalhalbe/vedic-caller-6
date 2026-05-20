@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export const colors = {
   gold: '#D4AF37',
   goldLight: '#F0D060',
@@ -17,10 +19,14 @@ export const colors = {
   border: '#E8E0D0',
 };
 
-export const fonts = {
-  heading: undefined,
-  body: undefined,
+export type FontFamily = {
+  heading: string;
+  body: string;
 };
+
+export const fonts: FontFamily = Platform.OS === 'web'
+  ? { heading: "'Playfair Display', serif", body: 'Manrope, sans-serif' }
+  : { heading: 'PlayfairDisplay_700Bold', body: 'Manrope_400Regular' };
 
 export const spacing = {
   xs: 4,

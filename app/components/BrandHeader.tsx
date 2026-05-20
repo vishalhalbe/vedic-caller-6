@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../lib/theme';
+import { colors, fonts } from '../lib/theme';
 
 export function BrandHeader({ tagline }: { tagline?: string }) {
   return (
     <View style={styles.wrapper}>
       <View style={styles.logoRing}>
-        <Text style={styles.om}>🪐</Text>
+        <Text style={styles.icon}>🪐</Text>
       </View>
       <Text style={styles.brand}>VedicCaller</Text>
       {tagline ? <Text style={styles.tagline}>{tagline}</Text> : null}
@@ -16,31 +16,33 @@ export function BrandHeader({ tagline }: { tagline?: string }) {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 28,
   },
   logoRing: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: 'rgba(212, 175, 55, 0.08)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.3)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(212, 175, 55, 0.25)',
   },
-  om: {
-    fontSize: 28,
+  icon: {
+    fontSize: 30,
   },
   brand: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: '700',
-    color: colors.gold,
+    color: colors.goldDark,
     letterSpacing: 1.5,
+    fontFamily: fonts.heading,
   },
   tagline: {
     fontSize: 14,
     color: colors.textMuted,
     marginTop: 6,
+    fontFamily: fonts.body,
   },
 });

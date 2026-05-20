@@ -27,7 +27,7 @@ export function useAuthForm(mode: FormMode) {
     const validationError = validate();
     if (validationError) {
       setError(validationError);
-      return null;
+      return validationError;
     }
     setLoading(true);
     const err = mode === 'login'

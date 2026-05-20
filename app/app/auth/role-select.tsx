@@ -3,9 +3,11 @@ import { router } from 'expo-router';
 import { BrandHeader } from '../../components/BrandHeader';
 import { GoldButton } from '../../components/GoldButton';
 import { GlassCard } from '../../components/GlassCard';
+import { ScreenShell } from '../../components/ScreenShell';
+import { AnimatedEntry } from '../../components/AnimatedEntry';
 import { useRoleSelect } from '../../lib/hooks/use-role-select';
-import { authContainer, authInner } from '../../styles/glass';
-import { colors, spacing, radius } from '../../lib/theme';
+import { authInner } from '../../styles/glass';
+import { colors, spacing } from '../../lib/theme';
 
 const roles = [
   { key: 'user' as const, icon: '🌟', title: "I'm a Seeker", desc: 'Find guidance from trusted astrologers' },
@@ -21,43 +23,45 @@ export default function RoleSelectScreen() {
   }
 
   return (
-    <View style={authContainer}>
+    <ScreenShell>
       <View style={authInner}>
-        <BrandHeader tagline="Choose your path" />
+        <AnimatedEntry>
+          <BrandHeader tagline="Choose your path" />
+        </AnimatedEntry>
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
-        {roles.map(r => {
+        {roles.map((r, i) => {
           const isSelected = selected === r.key;
           return (
-            <TouchableOpacity
-              key={r.key}
-              onPress={() => setSelected(r.key)}
-              activeOpacity={0.8}
-            >
-              <GlassCard elevated={isSelected} style={[styles.card, isSelected && styles.cardSelected]}>
-                <Text style={styles.icon}>{r.icon}</Text>
-                <View style={styles.cardBody}>
-                  <Text style={styles.cardTitle}>{r.title}</Text>
-                  <Text style={styles.cardDesc}>{r.desc}</Text>
-                </View>
-                <View style={[styles.radio, isSelected && styles.radioSelected]}>
-                  {isSelected && <View style={styles.radioInner} />}
-                </View>
-              </GlassCard>
-            </TouchableOpacity>
+            <AnimatedEntry key={r.key} delay={100 + i * 80}>
+              <TouchableOpacity onPress={() => setSelected(r.key)} activeOpacity={0.8}>
+                <GlassCard elevated={isSelected} style={[styles.card, isSelected && styles.cardSelected]}>
+                  <Text style={styles.icon}>{r.icon}</Text>
+                  <View style={styles.cardBody}>
+                    <Text style={styles.cardTitle}>{r.title}</Text>
+                    <Text style={styles.cardDesc}>{r.desc}</Text>
+                  </View>
+                  <View style={[styles.radio, isSelected && styles.radioSelected]}>
+                    {isSelected && <View style={styles.radioInner} />}
+                  </View>
+                </GlassCard>
+              </TouchableOpacity>
+            </AnimatedEntry>
           );
         })}
 
-        <GoldButton
-          title="Continue"
-          onPress={handleContinue}
-          loading={loading}
-          disabled={!selected}
-          style={{ marginTop: spacing.lg }}
-        />
+        <AnimatedEntry delay={280}>
+          <GoldButton
+            title="Continue"
+            onPress={handleContinue}
+            loading={loading}
+            disabled={!selected}
+            style={{ marginTop: spacing.lg }}
+          />
+        </AnimatedEntry>
       </View>
-    </View>
+    </ScreenShell>
   );
 }
 
@@ -83,11 +87,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.textPrimary,
+    fontFamily: 'Manrope_600SemiBold',
   },
   cardDesc: {
     fontSize: 12,
     color: colors.textMuted,
     marginTop: 2,
+    fontFamily: 'Manrope_400Regular',
   },
   radio: {
     width: 22,
